@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Vinyl Records & CD Shop</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Courier New', monospace;
+      background-color: #f5f2eb;
+      color: #333;
+      line-height: 1.6;
+      padding: 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+      border-bottom: 2px solid #8B4513;
+      padding-bottom: 20px;
+    }
+    
+    .header h1 {
+      font-size: 3rem;
+      margin-bottom: 10px;
+      color: #8B4513;
+      font-weight: bold;
+      letter-spacing: 2px;
+    }
+    
+    .header p {
+      font-style: italic;
+      color: #666;
+    }
+    
+    .products-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 25px;
+      margin-top: 30px;
+    }
+    
+    .product {
+      background-color: #fff;
+      border-radius: 5px;
+      overflow: hidden;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease;
+      border: 1px solid #ddd;
+      position: relative;
+      padding-bottom: 15px;
+    }
+    
+    .product:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    }
+    
+    .product-image {
+      height: 250px;
+      overflow: hidden;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #000;
+    }
+    
+    .product-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+    
+    .product:hover .product-image img {
+      transform: scale(1.05);
+    }
+    
+    .product-details {
+      padding: 15px;
+      text-align: center;
+    }
+    
+    .product-name {
+      font-weight: bold;
+      font-size: 1.2rem;
+      margin-bottom: 5px;
+      color: #333;
+    }
+    
+    .product-price {
+      font-weight: bold;
+      color: #8B4513;
+      font-size: 1.1rem;
+      margin-top: 8px;
+    }
+    
+    .vinyl-record {
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      background-color: #111;
+      border-radius: 50%;
+      right: 10px;
+      top: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .vinyl-record::after {
+      content: "";
+      width: 15px;
+      height: 15px;
+      background-color: #8B4513;
+      border-radius: 50%;
+    }
+    
+    .footer {
+      margin-top: 50px;
+      text-align: center;
+      font-size: 0.9rem;
+      color: #666;
+      border-top: 1px solid #ddd;
+      padding-top: 20px;
+    }
+    
+    @media (max-width: 768px) {
+      .products-container {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      }
+      
+      .header h1 {
+        font-size: 2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>VINYL & CD COLLECTION</h1>
+    <p>Koleksi musik premium untuk para pencinta audio vintage</p>
+  </div>
+  
+  <div id="produk-list" class="products-container"></div>
+  
+  <div class="footer">
+    <p>© 2025 Vinyl Records & CD Shop - Tempat terbaik untuk menemukan musik vintage</p>
+  </div>
+  
+  <script>
+    fetch('http://54.81.94.187/products')
+      .then(response => response.json())
+      .then(data => {
+        const list = document.getElementById('produk-list');
+        data.forEach(product => {
+          const productElement = document.createElement('div');
+          productElement.className = 'product';
+          productElement.innerHTML = `
+            <div class="product-image">
+              <img src="${product.image_url}" alt="${product.name}" />
+              <div class="vinyl-record"></div>
+            </div>
+            <div class="product-details">
+              <div class="product-name">${product.name}</div>
+              <div class="product-price">Rp ${Number(product.price).toLocaleString('id-ID')}</div>
+            </div>
+          `;
+          
+          list.appendChild(productElement);
+        });
+      })
+      .catch(error => {
+        console.error('Error fetching products:', error);
+        document.getElementById('produk-list').innerHTML = `
+          <div style="text-align:center; width:100%; padding:30px;">
+            <p>Gagal memuat data produk. Silakan coba lagi nanti.</p>
+          </div>
+        `;
+      });
+  </script>
+</body>
+</html>
